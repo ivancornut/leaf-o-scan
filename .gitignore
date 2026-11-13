@@ -1,0 +1,5 @@
+dataverse_files/
+validation/
+.venv/
+.pytest_cache/
+__pycache__/
