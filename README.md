@@ -48,6 +48,20 @@ You can analyse an image file with **Open image file(s)…** without a scanner. 
 
 On Windows, run `run_leafscan.bat`. Both launchers run `python -m leafscan`.
 
+**venv outside the project folder (Windows).** `run_leafscan.bat` and `build_exe.bat` look for the Python interpreter in this order:
+
+1. a venv folder given as an argument, for example `run_leafscan.bat C:\envs\leafscan`
+2. the venv folder written on the first line of a file **`venv_path.txt`** next to the `.bat` files, for example `C:\envs\leafscan` (no quotes). Use this to make double-clicking work.
+3. the currently activated venv (after running `C:\envs\leafscan\Scripts\activate`)
+4. `.venv` inside the project folder
+5. `python` on the PATH
+
+Each `.bat` prints which Python it uses.
+
+From a Python editor (Spyder, VS Code, IDLE, PyCharm), open **`run_leafscan.py`** in the project folder and press *Run*. You can also type `python run_leafscan.py` in a terminal. Make sure the editor uses the interpreter of the `.venv` you installed the requirements into.
+
+Do not run `leafscan/gui.py` or other files inside the `leafscan/` folder on their own. They are parts of a package, and Python cannot resolve their imports when they are started directly.
+
 1. Place the leaves flat on the glass, without overlapping, and close the lid.
 2. Enter a **Sample ID**. It increments automatically after each scan.
 3. Press **Quick scan** (150 dpi by default, about 16 s) or **HD scan** (600 dpi by default, about 35 s).
@@ -63,6 +77,21 @@ overlays/<id>_params.json   parameters and threshold used
 results_leaves.csv          one row per leaf (updated after every scan)
 results_holes.csv           one row per hole
 ```
+
+## Building a Windows program (.exe)
+
+On the Windows PC, after the installation above, double-click **`build_exe.bat`** in the project folder (it finds your venv as described under *Running*). You can also run it in a terminal:
+
+```bash
+build_exe.bat
+```
+
+It installs PyInstaller into `.venv` and builds `dist\LeafScan\LeafScan.exe` in a few minutes. The result is about 400 MB.
+
+* Copy or zip the **whole `dist\LeafScan` folder**, not just the `.exe`, because it needs the files next to it. Python does not need to be installed on the computers that use it, but each one needs the Canon WIA scanner driver.
+* PyInstaller cannot cross-compile: build on Windows to get a Windows `.exe`. The same command, without `.bat`, makes a macOS or Linux build on those systems.
+* Windows SmartScreen or an antivirus may warn about an unsigned new `.exe`. Choose *More info → Run anyway*, or ask IT to allow it.
+* After changing the code, run `build_exe.bat` again.
 
 ## Tests and validation
 
